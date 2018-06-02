@@ -8,4 +8,6 @@ import (
 func main() {
 	fmt.Println("Hello World")
 	sonar.CreateProject()
+	sonarURL := "https://localhost"
+	sonar.GetProjects(sonarURL)
 }
