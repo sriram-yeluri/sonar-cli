@@ -23,17 +23,25 @@ func CreateHttpRequest(url string, user AuthUser) (*http.Request) {
     req.Header.Add("content-type", "application/json")
 	Error(err,"GetProjects::http NewRequest")
 	
+	if DEBUG {
+		fmt.Println("Debug from CreateHttpRequest function : ")
+		fmt.Println("\nRequest URL :", req.URL)
+		fmt.Println("\nRequest Header : ", req.Header)
+	}
 	return req
 }
 
-func SendHttpRequest(req *http.Request) ([]byte){
-	
-	//ToDo - Add aurgument validations	
+func SendHttpRequest(req *http.Request) ([]byte){	
+	//ToDo - Add argument validations	
 	client := &http.Client{}
     resp, err := client.Do(req)
 	Error(err,"GetProjects::client.Do")	
 	respBody, err := ioutil.ReadAll(resp.Body)
 	Error(err,"GetProjects::read response body")
-
+	
+	if DEBUG {
+		fmt.Println("Debug from SendHttpRequest function : ")
+		fmt.Println("\n ResponseBody : ", respBody)
+	}
 	return respBody
 }
