@@ -9,5 +9,5 @@ func main() {
 	fmt.Println("Hello World")
 	sonar.CreateProject()
 	sonarURL := "http://localhost:9000"
-	sonar.GetProjects(sonarURL)
+	fmt.Printf("Project Count = %d\n" , sonar.GetProjects(sonarURL))
 }
