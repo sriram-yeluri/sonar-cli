@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"io/ioutil"
+	"log"
 )
 
 func HttpRequest(user AuthUser){
@@ -15,9 +16,12 @@ func HttpRequest(user AuthUser){
 //To make a request with custom headers, use NewRequest and Client.Do. 
 //func NewRequest(method, url string, body io.Reader) (*Request, error)
 
-func CreateHttpRequest(url string, user AuthUser) (*http.Request) {
+func CreateHttpRequest(method string,url string, user AuthUser) (*http.Request) {
 	//Todo - Add argument validations
-	req, err := http.NewRequest("GET", url, nil)
+	if user.Username == "" || user.Password == "" {
+		log.Fatal("[Error] Missing user name or password ")
+	}
+	req, err := http.NewRequest(method, url, nil)
     req.SetBasicAuth(user.Username, user.Password)
     req.Header.Add("accept", "application/json")
     req.Header.Add("content-type", "application/json")
@@ -41,7 +45,9 @@ func SendHttpRequest(req *http.Request) ([]byte){
 	
 	if DEBUG {
 		fmt.Println("Debug from SendHttpRequest function : ")
-		fmt.Println("\n ResponseBody : ", respBody)
+		fmt.Println("\n ResponseBody : ", resp.Body)
+		fmt.Println("\n Response Header : ", resp.Header)
+		fmt.Println("\n Response Status : ", resp.Status)
 	}
 	return respBody
 }
