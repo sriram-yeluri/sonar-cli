@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"flag"
 	"log"
 	"github.com/sriram-yeluri/sonar-cli/sonar"
@@ -13,13 +12,22 @@ func main() {
 	sonarURL := flag.String("url","http://localhost:9000", "Sonarqube URL")
 	username := flag.String("username", "admin", "Sonarqube user name ")
 	password := flag.String("password", "admin", "Sonarqube password ")
+	getprojects := flag.Bool("getProjects", false, "Get list of all Sonarqube projects")
+	projname := flag.String("projectName", "", "Project name")
+	projkey := flag.String("projectKey", "", "project key")
+	createProject := flag.Bool("createProject", false, "Create sonarqube project")
 	flag.Parse()
 
 	//Set credentials
 	user := glib.AuthUser{Username: *username, Password: *password}
+	project := sonar.ProjectStruct{ProjectName:*projname, ProjectKey:*projkey}
 
 	if *debugMode {
 		glib.DEBUG = true
+	}else if *createProject {
+		sonar.CreateProject(*sonarURL, user, project)
+	}else if *getprojects {
+		sonar.GetProjects(*sonarURL, user)
 	}else {
 		flag.Usage()
 		log.Fatal("Select a valid flag")
@@ -27,7 +35,7 @@ func main() {
 
 	//sonar.CreateProject()
 	//sonarURL := "http://localhost:9000"
-	count := sonar.GetProjects(*sonarURL, user)
-	fmt.Printf("Project Count = %d\n" , count)
+	//count := sonar.GetProjects(*sonarURL, user)
+	//fmt.Printf("Project Count = %d\n" , count)
 
 }

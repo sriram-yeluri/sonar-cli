@@ -10,3 +10,8 @@ type sonarComponentsStruct struct {
         Project      string `json:"project"`
     } `json:"components"`
 }
+
+type ProjectStruct struct {
+    ProjectName string
+    ProjectKey string
+}

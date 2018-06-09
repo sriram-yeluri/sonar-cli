@@ -35,11 +35,13 @@ func CreateHttpRequest(method string,url string, user AuthUser) (*http.Request) 
 	return req
 }
 
-func SendHttpRequest(req *http.Request) ([]byte){	
+func SendHttpRequest(req *http.Request) (*http.Response, []byte){
 	//ToDo - Add argument validations	
 	client := &http.Client{}
     resp, err := client.Do(req)
-	Error(err,"GetProjects::client.Do")	
+	Error(err,"GetProjects::client.Do")
+	defer resp.Body.Close()
+
 	respBody, err := ioutil.ReadAll(resp.Body)
 	Error(err,"GetProjects::read response body")
 	
@@ -49,5 +51,5 @@ func SendHttpRequest(req *http.Request) ([]byte){
 		fmt.Println("\n Response Header : ", resp.Header)
 		fmt.Println("\n Response Status : ", resp.Status)
 	}
-	return respBody
+	return resp, respBody
 }
