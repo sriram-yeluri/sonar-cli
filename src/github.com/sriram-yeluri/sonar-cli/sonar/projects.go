@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"github.com/sriram-yeluri/sonar-cli/glib"
+	"log"
 )
 
 
@@ -18,12 +19,10 @@ func GetProjects(sonarURL string,user glib.AuthUser) (int){
     json.Unmarshal(respBody, &sonarComponents)
     for _, component := range sonarComponents.Components {
         sonarKeysList = append(sonarKeysList, component.Key)
-        //sonarKeysList = append(sonarKeysList, component.Name)
         fmt.Println("Project Name : ", component.Name)
     }
-
-    return len(sonarKeysList)
-
+    fmt.Println("Total No. of Projects :", len(sonarKeysList))
+    return 0
 }
 
 /*
@@ -33,20 +32,50 @@ func GetProjects(sonarURL string,user glib.AuthUser) (int){
 @return status of project creation
 
  */
-func CreateProject(sonarURL string, user glib.AuthUser, proj ProjectStruct) (int){
+func CreateProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStruct) (int){
+	// Check if project exists before creating new project
+	projStatus := SearchProject(sonarURL, user,projectStruct)
 
-	//TODO : Check if project exists before creating new project
-	url := fmt.Sprintf("%s/api/projects/create", sonarURL)
-	req := glib.CreateHttpRequest("POST",url, user)
+	if projStatus == 200 {
+		url := fmt.Sprintf("%s/api/projects/create", sonarURL)
+		req := glib.CreateHttpRequest("POST",url, user)
 
-	//Append POST data
+		//Append POST data
+		query := req.URL.Query()
+		query.Add("name", projectStruct.ProjectName)
+		query.Add("project", projectStruct.ProjectKey)
+		req.URL.RawQuery = query.Encode()
+
+		resp, _ := glib.SendHttpRequest(req)
+		if resp.StatusCode == 200 {
+			fmt.Println("Project Created Successfully : ", projectStruct.ProjectName)
+		}
+		return resp.StatusCode
+	}
+	return 1
+}
+
+/*
+@Function to search for projects in Sonarqube
+@ Requires system administrator permission
+ */
+func SearchProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStruct) (int) {
+	url := fmt.Sprintf("%s/api/projects/search", sonarURL)
+	req := glib.CreateHttpRequest("GET",url, user)
+
+	//Append Query data
 	query := req.URL.Query()
-	query.Add("project", proj.ProjectName)
-	query.Add("name", proj.ProjectKey)
+	query.Add("projects", projectStruct.ProjectKey)
 	req.URL.RawQuery = query.Encode()
 
-	resp, _ := glib.SendHttpRequest(req)
-	fmt.Println("Project Creation status :", resp.Status)
+	resp,respBody := glib.SendHttpRequest(req)
 
+	var Search SearchProjectStruct
+	json.Unmarshal(respBody, &Search)
+
+
+	if Search.Paging.Total > 0 {
+		log.Fatal("Could not create Project, key already exists")
+	}
 	return resp.StatusCode
 }

@@ -15,3 +15,12 @@ type ProjectStruct struct {
     ProjectName string
     ProjectKey string
 }
+
+
+type SearchProjectStruct struct {
+    Paging struct {
+        PageIndex int `json:"pageIndex"`
+        PageSize  int `json:"pageSize"`
+        Total     int `json:"total"`
+    }
+}
