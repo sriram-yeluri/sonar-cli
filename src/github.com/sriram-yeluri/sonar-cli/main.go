@@ -24,7 +24,9 @@ func main() {
 
 	if *debugMode {
 		glib.DEBUG = true
-	}else if *createProject {
+	}
+
+	if *createProject {
 		sonar.CreateProject(*sonarURL, user, project)
 	}else if *getprojects {
 		sonar.GetProjects(*sonarURL, user)

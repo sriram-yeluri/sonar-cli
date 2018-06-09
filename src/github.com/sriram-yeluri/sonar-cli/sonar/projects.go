@@ -47,6 +47,12 @@ func CreateProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStr
 		req.URL.RawQuery = query.Encode()
 
 		resp, _ := glib.SendHttpRequest(req)
+
+		if glib.DEBUG {
+			fmt.Println("[DEBUG] fromn CreateProject function ")
+			fmt.Println("[DEBUG] response : ", resp.StatusCode)
+		}
+
 		if resp.StatusCode == 200 {
 			fmt.Println("Project Created Successfully : ", projectStruct.ProjectName)
 		}
@@ -73,6 +79,12 @@ func SearchProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStr
 	var Search SearchProjectStruct
 	json.Unmarshal(respBody, &Search)
 
+	if glib.DEBUG {
+		fmt.Println("[DEBUG] from SearchProject Function")
+		fmt.Println("[DEBUG] Project Key : ", projectStruct.ProjectKey)
+		fmt.Println("[DEBUG] Project Name : ", projectStruct.ProjectName)
+		fmt.Println("[DEBUG] Search query response : ", resp.StatusCode)
+	}
 
 	if Search.Paging.Total > 0 {
 		log.Fatal("Could not create Project, key already exists")
