@@ -21,3 +21,4 @@ Pull docker image of sonarqube and spin a container
 docker pull sonarqube  
 docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube  
 ```
+#### Local instance of sonarqube can be reached on http://localhost:9000 , with default credentials (admin/admin)
