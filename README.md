@@ -14,3 +14,10 @@ touch README.md
 
 export GOPATH=/home/sriram/goProjects/sonar-cli/  
 ```
+### For testing purpose, docker container is used on local instance.  
+Pull docker image of sonarqube and spin a container
+[Docker-hub-sonarqube](https://hub.docker.com/_/sonarqube/)  
+```
+docker pull sonarqube  
+docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube  
+```
