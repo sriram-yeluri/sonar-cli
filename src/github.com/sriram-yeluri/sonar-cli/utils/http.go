@@ -47,8 +47,8 @@ func SendHttpRequest(req *http.Request) (*http.Response, []byte){
 	
 	if DEBUG {
 		fmt.Println("Debug from SendHttpRequest function : ")
-		fmt.Println("\n ResponseBody : ", resp.Body)
-		fmt.Println("\n Response Header : ", resp.Header)
+		//fmt.Println("\n ResponseBody : ", resp.Body)
+		//fmt.Println("\n Response Header : ", resp.Header)
 		fmt.Println("\n Response Status : ", resp.Status)
 	}
 	return resp, respBody

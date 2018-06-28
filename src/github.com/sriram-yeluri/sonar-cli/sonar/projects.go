@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-
+/*
 func GetProjects(sonarURL string,user utils.AuthUser) (int){
 	url := fmt.Sprintf("%s/api/components/search?qualifiers=TRK", sonarURL)
 
@@ -23,6 +23,57 @@ func GetProjects(sonarURL string,user utils.AuthUser) (int){
     }
     fmt.Println("Total No. of Projects :", len(sonarKeysList))
     return 0
+}
+*/
+
+func GetProjects(sonarURL string,user utils.AuthUser) (int){
+
+	url := fmt.Sprintf("%s/api/components/search", sonarURL)
+	var sonarComponents ComponentsStruct
+	var sonarKeysList []string
+	page := 1
+	pageSize := 500
+	pagesRemaining := 0
+
+	req := utils.CreateHttpRequest("GET",url, user)
+
+	query := req.URL.Query()
+	query.Add("qualifiers","TRK")
+	query.Add("p", fmt.Sprintf("%v",page))
+	query.Add("ps",fmt.Sprintf("%v",pageSize))
+	req.URL.RawQuery = query.Encode()
+	_,respBody := utils.SendHttpRequest(req)
+
+	json.Unmarshal(respBody, &sonarComponents)
+
+
+	for _, component := range sonarComponents.Components {
+		sonarKeysList = append(sonarKeysList, component.Key)
+		//fmt.Println("Project Name : ", component.Name)
+	}
+
+	if sonarComponents.Paging.Total > 500 {
+		pagesRemaining += (sonarComponents.Paging.Total/500) -1
+		if (sonarComponents.Paging.Total%500) > 1{
+			pagesRemaining ++
+		}
+		fmt.Println("Remaining Pages : ",pagesRemaining)
+		for pagesRemaining > 0 {
+			page ++
+			query.Add("p", fmt.Sprintf("%v",page))
+			req.URL.RawQuery = query.Encode()
+			_,respBody := utils.SendHttpRequest(req)
+			json.Unmarshal(respBody, &sonarComponents)
+			for _, component := range sonarComponents.Components {
+				sonarKeysList = append(sonarKeysList, component.Key)
+				//fmt.Println("Project Name : ", component.Name)
+			}
+			pagesRemaining --
+		}
+	}
+	fmt.Println("Total No. of Projects :", len(sonarKeysList))
+	fmt.Println("Paging Total : ",sonarComponents.Paging.Total)
+	return 0
 }
 
 /*

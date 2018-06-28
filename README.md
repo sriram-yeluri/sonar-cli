@@ -18,6 +18,23 @@ Pull docker image of sonarqube and spin a container
 [Docker-hub-sonarqube](https://hub.docker.com/_/sonarqube/)  
 ```
 docker pull sonarqube  
-docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube  
+docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:6.7.4 
 ```
 #### Local instance of sonarqube can be reached on http://localhost:9000 , with default credentials (admin/admin)
+
+
+#### using pagination for Projects: [stackoverflow](https://stackoverflow.com/questions/47889780/how-to-get-more-than-500-issues-from-sonarqube-api)
+api/issues/search?componentKeys=PROJECT_KEY&ps=500&p=1,
+then api/issues/search?componentKeys=PROJECT_KEY&ps=500&p=2, etc.
+
+The total number of page can be retrieved from the response:  "paging" -> "total".
+Example:
+http://localhost:9000/api/components/search?qualifiers=TRK&p=2&ps=500
+```
+	"paging": {
+		"pageIndex": 2,
+		"pageSize": 500,
+		"total": 2001
+	}
+```
+	
