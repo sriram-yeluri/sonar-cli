@@ -3,16 +3,16 @@ package sonar
 import (
 	"fmt"
 	"encoding/json"
-	"github.com/sriram-yeluri/sonar-cli/glib"
+	"github.com/sriram-yeluri/sonar-cli/utils"
 	"log"
 )
 
 
-func GetProjects(sonarURL string,user glib.AuthUser) (int){
+func GetProjects(sonarURL string,user utils.AuthUser) (int){
 	url := fmt.Sprintf("%s/api/components/search?qualifiers=TRK", sonarURL)
 
-    req := glib.CreateHttpRequest("GET",url, user)
-    _,respBody := glib.SendHttpRequest(req)
+    req := utils.CreateHttpRequest("GET",url, user)
+    _,respBody := utils.SendHttpRequest(req)
 
     var sonarComponents sonarComponentsStruct
     var sonarKeysList []string
@@ -32,13 +32,13 @@ func GetProjects(sonarURL string,user glib.AuthUser) (int){
 @return status of project creation
 
  */
-func CreateProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStruct) (int){
+func CreateProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) (int){
 	// Check if project exists before creating new project
 	projStatus := SearchProject(sonarURL, user,projectStruct)
 
 	if projStatus == 200 {
 		url := fmt.Sprintf("%s/api/projects/create", sonarURL)
-		req := glib.CreateHttpRequest("POST",url, user)
+		req := utils.CreateHttpRequest("POST",url, user)
 
 		//Append POST data
 		query := req.URL.Query()
@@ -46,9 +46,9 @@ func CreateProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStr
 		query.Add("project", projectStruct.ProjectKey)
 		req.URL.RawQuery = query.Encode()
 
-		resp, _ := glib.SendHttpRequest(req)
+		resp, _ := utils.SendHttpRequest(req)
 
-		if glib.DEBUG {
+		if utils.DEBUG {
 			fmt.Println("[DEBUG] fromn CreateProject function ")
 			fmt.Println("[DEBUG] response : ", resp.StatusCode)
 		}
@@ -65,21 +65,21 @@ func CreateProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStr
 @Function to search for projects in Sonarqube
 @ Requires system administrator permission
  */
-func SearchProject(sonarURL string, user glib.AuthUser, projectStruct ProjectStruct) (int) {
+func SearchProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) (int) {
 	url := fmt.Sprintf("%s/api/projects/search", sonarURL)
-	req := glib.CreateHttpRequest("GET",url, user)
+	req := utils.CreateHttpRequest("GET",url, user)
 
 	//Append Query data
 	query := req.URL.Query()
 	query.Add("projects", projectStruct.ProjectKey)
 	req.URL.RawQuery = query.Encode()
 
-	resp,respBody := glib.SendHttpRequest(req)
+	resp,respBody := utils.SendHttpRequest(req)
 
 	var Search SearchProjectStruct
 	json.Unmarshal(respBody, &Search)
 
-	if glib.DEBUG {
+	if utils.DEBUG {
 		fmt.Println("[DEBUG] from SearchProject Function")
 		fmt.Println("[DEBUG] Project Key : ", projectStruct.ProjectKey)
 		fmt.Println("[DEBUG] Project Name : ", projectStruct.ProjectName)

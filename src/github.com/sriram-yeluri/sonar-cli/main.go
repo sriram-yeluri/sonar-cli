@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 	"github.com/sriram-yeluri/sonar-cli/sonar"
-	"github.com/sriram-yeluri/sonar-cli/glib"
+	"github.com/sriram-yeluri/sonar-cli/utils"
 )
 
 func main() {
@@ -19,11 +19,11 @@ func main() {
 	flag.Parse()
 
 	//Set credentials
-	user := glib.AuthUser{Username: *username, Password: *password}
+	user := utils.AuthUser{Username: *username, Password: *password}
 	project := sonar.ProjectStruct{ProjectName:*projname, ProjectKey:*projkey}
 
 	if *debugMode {
-		glib.DEBUG = true
+		utils.DEBUG = true
 	}
 
 	if *createProject {

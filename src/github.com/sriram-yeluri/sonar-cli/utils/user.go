@@ -1,4 +1,4 @@
-package glib
+package utils
 
 type AuthUser struct{
 	Username string
