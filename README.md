@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/sriram-yeluri/sonar-cli.svg?branch=master)](https://travis-ci.com/sriram-yeluri/sonar-cli)
+
 # sonar-cli
 sonarqube cli build with golang
 
