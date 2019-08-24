@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/sriram-yeluri/sonar-cli.svg?branch=master)](https://travis-ci.com/sriram-yeluri/sonar-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # sonar-cli
 sonarqube cli build with golang
