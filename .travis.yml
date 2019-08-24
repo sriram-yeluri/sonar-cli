@@ -1,0 +1,17 @@
+language: go
+
+go:
+  - 1.12.6
+
+install:
+  - # skip
+
+script:
+  - export GOPATH=$(pwd)
+  - cd src/github.com/sriram-yeluri/sonar-cli/
+  - go get -v ./...
+  - gox -os="linux darwin" -arch="amd64" -verbose ./...
+  - ls -lrt
+  
+notifications:
+  email: false
