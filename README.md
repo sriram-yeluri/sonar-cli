@@ -5,18 +5,28 @@
 # sonar-cli
 sonarqube cli build with golang
 
-## Project Setup
+## How to use sonar-cli
 
 ```sh
-mkdir -p sonar-cli/src/github.com/sriram-yeluri/sonar-cli  
-mkdir -p sonar-cli/src/github.com/sriram-yeluri/sonar-cli/utils  
-mkdir -p sonar-cli/src/github.com/sriram-yeluri/sonar-cli/sonarlib  
-mkdir -p sonar-cli/pkg  
-mkdir -p sonar-cli/bin  
-touch README.md  
-
-export GOPATH=/home/sriram/goProjects/sonar-cli/  
+Usage of ./sonar-cli:
+  -createProject
+    	Create sonarqube project
+  -debug
+    	run in debug mode
+  -getProjects
+    	Get list of all Sonarqube projects
+  -password string
+    	Sonarqube password  (default "admin")
+  -projectKey string
+    	project key
+  -projectName string
+    	Project name
+  -url string
+    	Sonarqube URL (default "http://localhost:9000")
+  -username string
+    	Sonarqube user name  (default "admin")
 ```
+
 ### For testing purpose, docker container is used on local instance.  
 Pull docker image of sonarqube and spin a container
 [Docker-hub-sonarqube](https://hub.docker.com/_/sonarqube/)  
