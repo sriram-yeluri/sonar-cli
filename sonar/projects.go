@@ -1,8 +1,8 @@
 package sonar
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"github.com/sriram-yeluri/sonar-cli/utils"
 	"log"
 )
@@ -26,7 +26,7 @@ func GetProjects(sonarURL string,user utils.AuthUser) (int){
 }
 */
 
-func GetProjects(sonarURL string,user utils.AuthUser) (int){
+func GetProjects(sonarURL string, user utils.AuthUser) int {
 
 	url := fmt.Sprintf("%s/api/components/search", sonarURL)
 	var sonarComponents ComponentsStruct
@@ -35,17 +35,16 @@ func GetProjects(sonarURL string,user utils.AuthUser) (int){
 	pageSize := 500
 	pagesRemaining := 0
 
-	req := utils.CreateHttpRequest("GET",url, user)
+	req := utils.CreateHttpRequest("GET", url, user)
 
 	query := req.URL.Query()
-	query.Add("qualifiers","TRK")
-	query.Add("p", fmt.Sprintf("%v",page))
-	query.Add("ps",fmt.Sprintf("%v",pageSize))
+	query.Add("qualifiers", "TRK")
+	query.Add("p", fmt.Sprintf("%v", page))
+	query.Add("ps", fmt.Sprintf("%v", pageSize))
 	req.URL.RawQuery = query.Encode()
-	_,respBody := utils.SendHttpRequest(req)
+	_, respBody := utils.SendHttpRequest(req)
 
 	json.Unmarshal(respBody, &sonarComponents)
-
 
 	for _, component := range sonarComponents.Components {
 		sonarKeysList = append(sonarKeysList, component.Key)
@@ -53,26 +52,26 @@ func GetProjects(sonarURL string,user utils.AuthUser) (int){
 	}
 
 	if sonarComponents.Paging.Total > 500 {
-		pagesRemaining += (sonarComponents.Paging.Total/500) -1
-		if (sonarComponents.Paging.Total%500) > 1{
-			pagesRemaining ++
+		pagesRemaining += (sonarComponents.Paging.Total / 500) - 1
+		if (sonarComponents.Paging.Total % 500) > 1 {
+			pagesRemaining++
 		}
-		fmt.Println("Remaining Pages : ",pagesRemaining)
+		fmt.Println("Remaining Pages : ", pagesRemaining)
 		for pagesRemaining > 0 {
-			page ++
-			query.Add("p", fmt.Sprintf("%v",page))
+			page++
+			query.Add("p", fmt.Sprintf("%v", page))
 			req.URL.RawQuery = query.Encode()
-			_,respBody := utils.SendHttpRequest(req)
+			_, respBody := utils.SendHttpRequest(req)
 			json.Unmarshal(respBody, &sonarComponents)
 			for _, component := range sonarComponents.Components {
 				sonarKeysList = append(sonarKeysList, component.Key)
 				//fmt.Println("Project Name : ", component.Name)
 			}
-			pagesRemaining --
+			pagesRemaining--
 		}
 	}
 	fmt.Println("Total No. of Projects :", len(sonarKeysList))
-	fmt.Println("Paging Total : ",sonarComponents.Paging.Total)
+	fmt.Println("Paging Total : ", sonarComponents.Paging.Total)
 	return 0
 }
 
@@ -82,14 +81,14 @@ func GetProjects(sonarURL string,user utils.AuthUser) (int){
 @Param user name and password from glib.AuthUSer
 @return status of project creation
 
- */
-func CreateProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) (int){
+*/
+func CreateProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) int {
 	// Check if project exists before creating new project
-	projStatus := SearchProject(sonarURL, user,projectStruct)
+	projStatus := SearchProject(sonarURL, user, projectStruct)
 
 	if projStatus == 200 {
 		url := fmt.Sprintf("%s/api/projects/create", sonarURL)
-		req := utils.CreateHttpRequest("POST",url, user)
+		req := utils.CreateHttpRequest("POST", url, user)
 
 		//Append POST data
 		query := req.URL.Query()
@@ -115,17 +114,17 @@ func CreateProject(sonarURL string, user utils.AuthUser, projectStruct ProjectSt
 /*
 @Function to search for projects in Sonarqube
 @ Requires system administrator permission
- */
-func SearchProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) (int) {
+*/
+func SearchProject(sonarURL string, user utils.AuthUser, projectStruct ProjectStruct) int {
 	url := fmt.Sprintf("%s/api/projects/search", sonarURL)
-	req := utils.CreateHttpRequest("GET",url, user)
+	req := utils.CreateHttpRequest("GET", url, user)
 
 	//Append Query data
 	query := req.URL.Query()
 	query.Add("projects", projectStruct.ProjectKey)
 	req.URL.RawQuery = query.Encode()
 
-	resp,respBody := utils.SendHttpRequest(req)
+	resp, respBody := utils.SendHttpRequest(req)
 
 	var Search SearchProjectStruct
 	json.Unmarshal(respBody, &Search)

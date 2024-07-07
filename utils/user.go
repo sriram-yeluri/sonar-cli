@@ -1,6 +1,6 @@
 package utils
 
-type AuthUser struct{
+type AuthUser struct {
 	Username string
 	Password string
 }

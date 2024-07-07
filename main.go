@@ -2,14 +2,14 @@ package main
 
 import (
 	"flag"
-	"log"
 	"github.com/sriram-yeluri/sonar-cli/sonar"
 	"github.com/sriram-yeluri/sonar-cli/utils"
+	"log"
 )
 
 func main() {
 	debugMode := flag.Bool("debug", false, "run in debug mode")
-	sonarURL := flag.String("url","http://localhost:9000", "Sonarqube URL")
+	sonarURL := flag.String("url", "http://localhost:9000", "Sonarqube URL")
 	username := flag.String("username", "admin", "Sonarqube user name ")
 	password := flag.String("password", "admin", "Sonarqube password ")
 	getprojects := flag.Bool("getProjects", false, "Get list of all Sonarqube projects")
@@ -20,7 +20,7 @@ func main() {
 
 	//Set credentials
 	user := utils.AuthUser{Username: *username, Password: *password}
-	project := sonar.ProjectStruct{ProjectName:*projname, ProjectKey:*projkey}
+	project := sonar.ProjectStruct{ProjectName: *projname, ProjectKey: *projkey}
 
 	if *debugMode {
 		utils.DEBUG = true
@@ -28,9 +28,9 @@ func main() {
 
 	if *createProject {
 		sonar.CreateProject(*sonarURL, user, project)
-	}else if *getprojects {
+	} else if *getprojects {
 		sonar.GetProjects(*sonarURL, user)
-	}else {
+	} else {
 		flag.Usage()
 		log.Fatal("Select a valid flag")
 	}
