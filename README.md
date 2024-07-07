@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.com/sriram-yeluri/sonar-cli.svg?branch=master)](https://travis-ci.com/sriram-yeluri/sonar-cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sriram-yeluri/sonar-cli)](https://goreportcard.com/report/github.com/sriram-yeluri/sonar-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
